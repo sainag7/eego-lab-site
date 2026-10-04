@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EEGo Lab</title>
+  <meta name="description" content="EEGo Lab advances research in wearable brain-computer interfaces and machine learning. Home of EEGProc, a lightweight Python library for EEG processing, deep learning, and model explanations.">
+  <meta name="theme-color" content="#041426">
+  <!-- Replace the absolute URLs below if the site is served somewhere other than eego-unc.github.io. -->
+  <link rel="canonical" href="https://eego-unc.github.io/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EEGo Lab">
+  <meta property="og:title" content="EEGo Lab and EEGProc">
+  <meta property="og:description" content="Advancing research in wearable brain-computer interfaces and machine learning. Featuring EEGProc: pip install eegproc">
+  <meta property="og:url" content="https://eego-unc.github.io/">
+  <meta property="og:image" content="https://eego-unc.github.io/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="EEGo Lab logo with the line: featuring EEGProc, a Python library for EEG processing, deep learning, and model explanations.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EEGo Lab and EEGProc">
+  <meta name="twitter:description" content="Advancing research in wearable brain-computer interfaces and machine learning. Featuring EEGProc.">
+  <meta name="twitter:image" content="https://eego-unc.github.io/assets/og-image.png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Inter:wght@400..700&amp;display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Inter:wght@400..700&amp;display=swap"></noscript>
+  <link rel="preload" as="image" href="assets/lab/science-expo-1600.webp" imagesrcset="assets/lab/science-expo-960.webp 960w, assets/lab/science-expo-1600.webp 1600w" imagesizes="(max-width: 1100px) 92vw, 1024px" fetchpriority="high">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script>
+    // Apply the saved theme and motion preference before first paint. Navy is the default.
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        if (localStorage.getItem("eegproc-theme") === "light") root.setAttribute("data-theme", "light");
+      } catch (e) {}
+      var forced = /[?&]motion=reduced\b/.test(location.search);
+      if (forced || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+        root.classList.add("reduce-motion");
+      }
+    })();
+    window.Prism = { manual: true };
+  </script>
+
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "ResearchOrganization",
+      "name": "EEGo Lab",
+      "url": "https://eego-unc.github.io/Lab/",
+      "sameAs": ["https://github.com/EEGo-UNC"],
+      "description": "A student-led research group spanning the University of North Carolina at Chapel Hill and Columbia University, exploring wearable EEG, brain-computer interfaces, and machine learning for neuroadaptive applications."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareSourceCode",
+      "name": "EEGProc",
+      "description": "A lightweight Python library for EEG processing, deep learning, and model explanations.",
+      "codeRepository": "https://github.com/EEGo-UNC/EEGProc",
+      "programmingLanguage": { "@type": "ComputerLanguage", "name": "Python" },
+      "runtimePlatform": "Python 3.10+",
+      "version": "2.0.0",
+      "license": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html",
+      "author": [{ "@type": "Person", "name": "Vitor Inserra" }],
+      "sourceOrganization": { "@type": "Organization", "name": "EEGo Lab", "url": "https://eego-unc.github.io/Lab/" }
+    }
+  ]
+  </script>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.11/dist/lenis.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-core.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-python.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-bash.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <p class="sr-only" id="live" aria-live="polite"></p>
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a class="banner-logo-link" href="#home" aria-label="EEGo Lab home">
+        <img class="banner-logo logo-on-dark" src="assets/lab/eego-logo-dark.webp" alt="" width="420" height="288">
+        <img class="banner-logo logo-on-light" src="assets/lab/eego-logo-light.webp" alt="" width="420" height="288" loading="lazy">
+      </a>
+      <nav id="main-navigation" class="banner-nav" aria-label="Main navigation">
+        <a href="#home" data-route="home">Home</a>
+        <a href="#eegproc" data-route="eegproc">EEGProc</a>
+        <a href="#projects" data-route="projects">Projects</a>
+        <a href="#research" data-route="research">Research and Presentations</a>
+        <a href="#people" data-route="people">People</a>
+        <span class="nav-indicator" aria-hidden="true"></span>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" aria-label="Switch to light theme">
+          <svg class="icon icon-sun"><use href="#i-sun"/></svg>
+          <svg class="icon icon-moon"><use href="#i-moon"/></svg>
+        </button>
+        <button class="menu-toggle" type="button" aria-controls="main-navigation" aria-expanded="false">
+          <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+          Menu
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+
+    <!-- ===================== Home ===================== -->
+    <section class="page page-home" id="page-home" data-page="home" aria-labelledby="home-title">
+      <div class="welcome">
+        <div class="welcome-hero">
+          <canvas class="welcome-wave" aria-hidden="true"></canvas>
+          <h1 id="home-title" class="welcome-title" tabindex="-1" data-split="chars">EEGo Lab</h1>
+          <p class="introduction" data-intro>Advancing Research in Wearable Brain-Computer Interfaces (BCI) and Machine Learning (ML)</p>
+          <a class="welcome-github" href="https://github.com/EEGo-UNC" data-intro>EEGo Lab on GitHub ↗</a>
+        </div>
+
+        <figure class="welcome-photo">
+          <img src="assets/lab/science-expo-1600.webp" srcset="assets/lab/science-expo-960.webp 960w, assets/lab/science-expo-1600.webp 1600w" sizes="(max-width: 1100px) 92vw, 1024px" alt="EEGo Lab researchers demonstrating a wearable brain-computer interface at the UNC Science Expo" width="1600" height="1067" fetchpriority="high" data-parallax>
+        </figure>
+
+        <blockquote class="welcome-quote" data-words>“BCI is the future, but there is still so much to understand about the brain and how to connect it to software.”</blockquote>
+
+        <div class="welcome-description" data-reveal-group>
+          <p>EEGo Lab is a student-led research group that spans the University of North Carolina at Chapel Hill and Columbia University exploring wearable EEG, brain-computer interfaces, and machine learning for neuroadaptive applications.</p>
+          <p>Our work focuses on using real-time brain signals to study cognitive and emotional states, improve user experimentation, and build adaptive systems for education, VR, and interactive software.</p>
+          <p>Supported by the UNC Graduate Fund, UNC Honors Undergraduate Fund, and Emotiv Inc.</p>
+        </div>
+
+        <article class="publication-entry featured" data-reveal>
+          <a class="featured-visual" href="#eegproc" aria-label="Explore EEGProc">
+            <canvas class="featured-wave" aria-hidden="true"></canvas>
+            <img class="logo-on-dark" src="assets/eegproc-logo-dark-600.webp" alt="" width="600" height="212" loading="lazy">
+            <img class="logo-on-light" src="assets/eegproc-logo-light-600.webp" alt="" width="600" height="212" loading="lazy">
+          </a>
+          <div class="publication-entry-content">
+            <p class="publication-entry-label">Featured project</p>
+            <h2>EEGProc</h2>
+            <p class="publication-entry-detail">A lightweight Python library for EEG processing, deep learning, and model explanations. Follow a recording from raw signal to an explained prediction, one scroll at a time.</p>
+            <div class="install install-sm">
+              <code><span class="prompt" aria-hidden="true">$</span> pip install eegproc</code>
+              <button class="copy-btn" type="button" data-copy="pip install eegproc" aria-label="Copy the install command">
+                <svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg>
+              </button>
+            </div>
+            <div class="publication-entry-links">
+              <a href="#eegproc">Explore EEGProc</a>
+              <a href="https://github.com/EEGo-UNC/EEGProc">EEGProc on GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <figure class="welcome-photo welcome-photo--portrait" data-polaroid>
+          <img src="assets/lab/lab-group-photo.webp" alt="Four EEGo Lab members together in an instant photograph" width="1000" height="1333" loading="lazy" decoding="async">
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===================== EEGProc ===================== -->
+    <section class="page page-eegproc" id="page-eegproc" data-page="eegproc" aria-labelledby="eegproc-title" hidden>
+      <header class="eeg-hero">
+        <h1 id="eegproc-title" class="eeg-hero-logo" tabindex="-1">
+          <img class="logo-on-dark" data-src="assets/eegproc-logo-dark.webp" data-srcset="assets/eegproc-logo-dark-600.webp 600w, assets/eegproc-logo-dark.webp 1100w" sizes="(max-width: 640px) 80vw, 460px" alt="EEGProc" width="1100" height="389" loading="lazy">
+          <img class="logo-on-light" data-src="assets/eegproc-logo-light.webp" data-srcset="assets/eegproc-logo-light-600.webp 600w, assets/eegproc-logo-light.webp 1100w" sizes="(max-width: 640px) 80vw, 460px" alt="EEGProc" width="1100" height="389" loading="lazy">
+        </h1>
+        <p class="eeg-tagline" data-intro>A lightweight Python library for EEG processing, deep learning, and model explanations.</p>
+        <p class="eeg-abstract" data-intro>EEGProc cleans EEG recordings, turns them into features, trains and evaluates models one held-out subject at a time, and shows which electrodes and frequency bands a prediction depends on. It aims to be easy for AI coding assistants and non-technical researchers to use, while keeping the control that EEG deep learning work needs.</p>
+        <div class="hero-actions" data-intro>
+          <div class="install">
+            <code><span class="prompt" aria-hidden="true">$</span> pip install eegproc</code>
+            <button class="copy-btn" type="button" data-copy="pip install eegproc" aria-label="Copy the install command">
+              <svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg>
+            </button>
+          </div>
+          <a class="btn" href="https://github.com/EEGo-UNC/EEGProc"><svg class="icon"><use href="#i-github"/></svg> GitHub repository</a>
+          <a class="btn" href="https://eego-unc.github.io/EEGProc/">Documentation</a>
+        </div>
+        <p class="hero-extra" data-intro>
+          Models, cross-validation and counterfactuals need the extra:
+          <code>pip install "eegproc[deep-learning]"</code>
+          <button class="copy-btn copy-btn-sm" type="button" data-copy='pip install "eegproc[deep-learning]"' aria-label="Copy the deep-learning install command">
+            <svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg>
+          </button>
+        </p>
+        <dl class="facts" data-intro>
+          <div><dt>Version</dt><dd><a href="https://pypi.org/project/eegproc/">2.0.0 on PyPI</a></dd></div>
+          <div><dt>Python</dt><dd>3.10 or newer</dd></div>
+          <div><dt>License</dt><dd><a href="https://github.com/EEGo-UNC/EEGProc/blob/main/LICENSE">GPLv2</a></dd></div>
+          <div><dt>Tests</dt><dd><a class="badge-live" href="https://github.com/EEGo-UNC/EEGProc/actions/workflows/tests.yml"><img data-src="https://github.com/EEGo-UNC/EEGProc/actions/workflows/tests.yml/badge.svg?branch=v2" alt="Tests workflow status on GitHub Actions" width="104" height="20" loading="lazy"></a></dd></div>
+        </dl>
+      </header>
+
+      <div class="container">
+        <canvas class="hero-wave" aria-hidden="true"></canvas>
+        <nav class="jump" aria-label="EEGProc sections">
+          <span class="jump-label">Jump to</span>
+          <a href="#pipeline">Pipeline</a>
+          <a href="#model">Targets</a>
+          <a href="#pillars">Library</a>
+          <a href="#features">Featurizers</a>
+          <a href="#datasets">Datasets</a>
+          <a href="#validation">Validation</a>
+          <a href="#explain">Explanations</a>
+          <a href="#changelog">Version 2.0</a>
+          <a href="#layout">Package layout</a>
+          <a href="#quickstart">Quickstart</a>
+          <a href="#contributing">Contributing</a>
+        </nav>
+      </div>
+
+    <!-- Figure 1: the pipeline -->
+    <section class="section section-pipeline" id="pipeline" aria-labelledby="pipeline-title">
+      <div class="container"><div class="prose">
+        <h2 id="pipeline-title">From brain signal to explained prediction</h2>
+        <p>Figure 1 follows fourteen channels of synthetic EEG through the five stages EEGProc covers. Scroll to step through it. Each panel names the function that does the work.</p>
+      </div></div>
+
+      <div class="pipe" id="pipe">
+        <div class="pipe-inner container">
+          <div class="pipe-rail" role="group" aria-label="Figure 1 panels">
+            <div class="pipe-rail-track" aria-hidden="true"><div class="pipe-rail-fill"></div></div>
+            <ol>
+              <li><button type="button" data-step="0"><span>a</span> <em>Raw</em></button></li>
+              <li><button type="button" data-step="1"><span>b</span> <em>Preprocess</em></button></li>
+              <li><button type="button" data-step="2"><span>c</span> <em>Featurize</em></button></li>
+              <li><button type="button" data-step="3"><span>d</span> <em>Validate</em></button></li>
+              <li><button type="button" data-step="4"><span>e</span> <em>Explain</em></button></li>
+            </ol>
+          </div>
+
+          <div class="pipe-stage">
+            <figure class="pipe-step" data-step="0" aria-labelledby="ps1-t">
+              <figcaption class="pipe-cap">
+                <h3 id="ps1-t"><span class="fig-num">Figure 1a.</span> Raw EEG</h3>
+                <p>A synthetic recording of 14 channels at 128 Hz, laid out like DREAMER (AF3 to AF4), with line noise, slow drift and eye blinks. EEGProc expects a table with one column per electrode, such as the CSV that <code>eegproc-to-csv</code> writes.</p>
+              </figcaption>
+              <div class="pipe-art">
+                <svg id="ps1" viewBox="0 0 960 540" role="img" aria-label="Fourteen noisy EEG traces labeled AF3 through AF4 scroll from right to left. A scale bar marks one second."></svg>
+              </div>
+            </figure>
+
+            <figure class="pipe-step" data-step="1" aria-labelledby="ps2-t">
+              <figcaption class="pipe-cap">
+                <h3 id="ps2-t"><span class="fig-num">Figure 1b.</span> Preprocessing</h3>
+                <p><code>bandpass_filter</code> re-references the channels, removes line noise with a notch filter, detrends, and splits each channel into frequency bands. The figure shows theta, alpha and beta; <code>FREQUENCY_BANDS</code> defines six bands from delta to gamma.</p>
+              </figcaption>
+              <div class="pipe-art">
+                <svg id="ps2" viewBox="0 0 960 540" role="img" aria-label="A sweep passes across the traces, replacing noisy signals with clean ones. Channel AF3 then splits into three labeled band signals: theta, alpha and beta."></svg>
+              </div>
+            </figure>
+
+            <figure class="pipe-step" data-step="2" aria-labelledby="ps3-t">
+              <figcaption class="pipe-cap">
+                <h3 id="ps3-t"><span class="fig-num">Figure 1c.</span> Features</h3>
+                <p><code>psd_bandpowers</code> computes Welch band power in 4-second windows that overlap by half, one table row per window. <code>shannons_entropy</code> then summarizes how evenly each channel's power is spread across the bands.</p>
+              </figcaption>
+              <div class="pipe-art">
+                <svg id="ps3" viewBox="0 0 960 540" role="img" aria-label="Overlapping four-second windows slide along the AF3 band signals. Each window becomes a group of three band-power bars and fills one row of a feature table with columns AF3_theta, AF3_alpha, AF3_beta and AF3_entropy."></svg>
+              </div>
+            </figure>
+
+            <figure class="pipe-step" data-step="3" aria-labelledby="ps4-t">
+              <figcaption class="pipe-cap">
+                <h3 id="ps4-t"><span class="fig-num">Figure 1d.</span> Training and validation</h3>
+                <p><code>cross_validate_dataframe</code> groups feature rows into short sequences for a <code>BiLSTMClassifier</code>, which reads them in both directions. With <code>strategy="fixed_loso"</code> every subject is held out once, and the per-subject scores end up in <code>results["user_metrics"]</code>. The score bars are illustrative.</p>
+              </figcaption>
+              <div class="pipe-art">
+                <svg id="ps4" viewBox="0 0 960 540" role="img" aria-label="Four feature rows stream into a bidirectional LSTM. The forward cells light up left to right and the backward cells right to left, then the output layer lights. Illustrative per-subject score bars fill on the right."></svg>
+              </div>
+            </figure>
+
+            <figure class="pipe-step" data-step="4" aria-labelledby="ps5-t">
+              <figcaption class="pipe-cap">
+                <h3 id="ps5-t"><span class="fig-num">Figure 1e.</span> Explanation</h3>
+                <p><code>ModelAgnosticCounterfactualOptimizer</code> changes a held-out input, not the model's weights, until the prediction flips. The scalp map shows how much each electrode changed in the alpha band. Values are illustrative.</p>
+              </figcaption>
+              <div class="pipe-art">
+                <svg id="ps5" viewBox="0 0 960 540" role="img" aria-label="The class probability rises past the target and the prediction flips from low valence to high valence. A scalp map of alpha-band changes fades in, with fourteen electrodes marked."></svg>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <noscript>
+        <div class="container"><img class="static-fallback" src="assets/typical-eeg-pipeline.png" alt="Typical EEG application pipeline: a task and wearable EEG feed a server and machine-learning model, with labels for training and state estimates for application feedback" width="1430" height="495"></div>
+      </noscript>
+    </section>
+
+    <!-- Targets -->
+    <section class="section" id="model" aria-labelledby="model-title">
+      <div class="container"><div class="prose">
+        <h2 id="model-title">What you can model</h2>
+        <p>Developers and researchers use EEGProc to estimate affective state, described by valence and arousal, and cognitive state: attention, cognitive load and engagement. Your labeled recordings, your model and your evaluation protocol define the actual prediction task.</p>
+      </div></div>
+
+      <div class="container">
+        <figure class="fig">
+          <div class="fig-body model-grid">
+            <div class="va-block">
+              <h3><span class="panel">a</span> Valence and arousal</h3>
+              <div class="va">
+                <div class="va-plane" role="group" aria-label="Valence and arousal plane. Valence runs from negative on the left to positive on the right; arousal from low at the bottom to high at the top.">
+                  <button class="va-q" type="button" data-q="0" aria-describedby="va-readout"><span>Frustration</span><span>anxiety</span></button>
+                  <button class="va-q" type="button" data-q="1" aria-describedby="va-readout"><span>Enjoyment</span><span>excitement</span></button>
+                  <button class="va-q" type="button" data-q="2" aria-describedby="va-readout"><span>Boredom</span><span>sadness</span></button>
+                  <button class="va-q" type="button" data-q="3" aria-describedby="va-readout"><span>Calmness</span><span>relaxation</span></button>
+                  <span class="va-axis va-axis-x" aria-hidden="true"></span>
+                  <span class="va-axis va-axis-y" aria-hidden="true"></span>
+                  <span class="va-label va-label-top" aria-hidden="true">high arousal</span>
+                  <span class="va-label va-label-bottom" aria-hidden="true">low arousal</span>
+                  <span class="va-label va-label-left" aria-hidden="true">negative valence</span>
+                  <span class="va-label va-label-right" aria-hidden="true">positive valence</span>
+                  <span class="va-dot" aria-hidden="true"></span>
+                </div>
+                <p class="va-readout" id="va-readout" aria-live="polite">Select a quadrant to read where it sits.</p>
+              </div>
+            </div>
+
+            <div class="cog-block">
+              <h3><span class="panel">b</span> Cognitive state</h3>
+              <ul class="gauges">
+                <li class="gauge">
+                  <svg viewBox="0 0 120 72" aria-hidden="true"><path class="gauge-track" d="M12 64 A48 48 0 0 1 108 64"/><path class="gauge-arc" d="M12 64 A48 48 0 0 1 108 64" style="--gauge-color: var(--theta)"/><line class="gauge-needle" x1="60" y1="64" x2="60" y2="24" data-angle="-28"/><circle class="gauge-hub" cx="60" cy="64" r="4"/></svg>
+                  <h4>Attention</h4>
+                  <p>Is the person focused on the task?</p>
+                </li>
+                <li class="gauge">
+                  <svg viewBox="0 0 120 72" aria-hidden="true"><path class="gauge-track" d="M12 64 A48 48 0 0 1 108 64"/><path class="gauge-arc" d="M12 64 A48 48 0 0 1 108 64" style="--gauge-color: var(--beta)"/><line class="gauge-needle" x1="60" y1="64" x2="60" y2="24" data-angle="34"/><circle class="gauge-hub" cx="60" cy="64" r="4"/></svg>
+                  <h4>Cognitive load</h4>
+                  <p>How much mental effort does the task demand?</p>
+                </li>
+                <li class="gauge">
+                  <svg viewBox="0 0 120 72" aria-hidden="true"><path class="gauge-track" d="M12 64 A48 48 0 0 1 108 64"/><path class="gauge-arc" d="M12 64 A48 48 0 0 1 108 64" style="--gauge-color: var(--alpha)"/><line class="gauge-needle" x1="60" y1="64" x2="60" y2="24" data-angle="8"/><circle class="gauge-hub" cx="60" cy="64" r="4"/></svg>
+                  <h4>Engagement</h4>
+                  <p>How involved does the person stay over time?</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <figcaption><b>Figure 2.</b> Common prediction targets. (a) The valence and arousal plane; select a quadrant to read its description. (b) Attention, cognitive load and engagement. The dials are drawings, not measurements.</figcaption>
+        </figure>
+      </div>
+
+      <div class="container"><div class="prose">
+        <h3>Where EEGProc fits</h3>
+        <p>A typical project records EEG with a wearable headset while someone does a task, pairs the recordings with labels such as self-reports or task scores, and trains a model on a server. The model's state estimates then feed back into the application. EEGProc covers preprocessing, features, model building, evaluation and explanations. The recording device, data storage and the application loop are up to your project.</p>
+      </div></div>
+    </section>
+
+    <!-- Library -->
+    <section class="section" id="pillars" aria-labelledby="pillars-title">
+      <div class="container"><div class="prose">
+        <h2 id="pillars-title">What the library includes</h2>
+        <p>The base install covers preprocessing, features, dataset conversion and plotting. Models, cross-validation and counterfactual explanations need the <code>deep-learning</code> extra, which adds TensorFlow and scikit-learn.</p>
+
+        <div class="pillar">
+          <aside class="note">Base install.</aside>
+          <h3>Preprocessing and features</h3>
+          <p>Bandpass filtering, detrending, spectral band power, Hjorth parameters (activity, mobility and complexity), and Shannon, wavelet and IMF (empirical mode decomposition) entropy. The functions work on pandas DataFrames.</p>
+          <button class="disclosure" type="button" aria-expanded="false" aria-controls="pillar-code-1">
+            <svg class="icon"><use href="#i-chevron"/></svg> Show code
+          </button>
+          <div class="code" id="pillar-code-1" hidden>
+            <div class="code-bar"><span>python</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-python">from eegproc import bandpass_filter, hjorth_params, FREQUENCY_BANDS
+
+clean = bandpass_filter(raw, fs, bands=FREQUENCY_BANDS)  # AF3_delta ... AF4_gamma
+hjorth = hjorth_params(clean, fs)  # AF3_alpha_activity, _mobility, _complexity</code></pre>
+          </div>
+        </div>
+
+        <div class="pillar">
+          <aside class="note">Base install.</aside>
+          <h3>Dataset conversion</h3>
+          <p><code>eegproc-to-csv</code> converts downloaded DREAMER, AMIGOS, EEGEmotions-27 and DEAP recordings, and the Cowen/Keltner emotion ratings, into CSV or gzipped CSV.</p>
+          <button class="disclosure" type="button" aria-expanded="false" aria-controls="pillar-code-2">
+            <svg class="icon"><use href="#i-chevron"/></svg> Show code
+          </button>
+          <div class="code" id="pillar-code-2" hidden>
+            <div class="code-bar"><span>shell</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-bash">pip install eegproc
+eegproc-to-csv --dataset dreamer --input DREAMER.mat --output dreamer.csv.gz</code></pre>
+          </div>
+        </div>
+
+        <div class="pillar">
+          <aside class="note">Needs <code>eegproc[deep-learning]</code>.</aside>
+          <h3>Models and evaluation</h3>
+          <p>Reusable CNN1D, CNN2D and graph-convolution encoders (including a multi-task GCN), RNN classifiers such as a BiLSTM, dense and variational classifier heads, VAE and supervised-contrastive losses, domain-generalization helpers for meta-learning and alternating group learning, and subject-wise cross-validation.</p>
+          <button class="disclosure" type="button" aria-expanded="false" aria-controls="pillar-code-3">
+            <svg class="icon"><use href="#i-chevron"/></svg> Show code
+          </button>
+          <div class="code" id="pillar-code-3" hidden>
+            <div class="code-bar"><span>python</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-python">from eegproc.deep_learning.supervised.rnn_architectures import BiLSTMClassifier
+
+# 4 feature rows per input, 42 features (14 channels x 3 bands), 2 classes
+model = BiLSTMClassifier(timesteps=4, n_features=42, n_classes=2).build()</code></pre>
+          </div>
+        </div>
+
+        <div class="pillar">
+          <aside class="note">Needs <code>eegproc[deep-learning]</code>.</aside>
+          <h3>Model explanations</h3>
+          <p>Counterfactual optimization for any differentiable TensorFlow model, connected through a small adapter, with plots and scalp topographies of what changed.</p>
+          <button class="disclosure" type="button" aria-expanded="false" aria-controls="pillar-code-4">
+            <svg class="icon"><use href="#i-chevron"/></svg> Show code
+          </button>
+          <div class="code" id="pillar-code-4" hidden>
+            <div class="code-bar"><span>python</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-python">from eegproc.model_explainability.model_agnostic import (
+    KerasInputAdapter, ModelAgnosticCounterfactualOptimizer,
+)
+
+adapter = KerasInputAdapter(model, output_kind="logits")
+optimizer = ModelAgnosticCounterfactualOptimizer(adapter, target_probability=0.8)
+result = optimizer.optimize(trial[None, ...], target_class=1)</code></pre>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Table 1: featurizers -->
+    <section class="section" id="features" aria-labelledby="features-title">
+      <div class="container"><div class="prose">
+        <h2 id="features-title">How the featurizers connect</h2>
+        <p>Each featurizer reads the output of the step before it. The band-energy functions start from the raw or filtered signal, and each entropy function reads the matching energy table. Choose a function in Table 1 to see its input and output.</p>
+      </div></div>
+
+      <div class="container">
+        <figure class="fig">
+          <div class="fx">
+            <div class="fx-table-wrap fig-body">
+              <table class="fx-table">
+                <caption class="sr-only">Featurization functions with what each consumes and emits. Choose a function to show its flow.</caption>
+                <thead>
+                  <tr><th scope="col">Function</th><th scope="col">Consumes</th><th scope="col">Emits</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-fn="0"><th scope="row"><button type="button" aria-pressed="true"><code>bandpass_filter</code></button></th><td>raw signal</td><td><code>{channel}_{band}</code></td></tr>
+                  <tr data-fn="1"><th scope="row"><button type="button" aria-pressed="false"><code>psd_bandpowers</code></button></th><td>filtered signal</td><td><code>{channel}_{band}</code></td></tr>
+                  <tr data-fn="2"><th scope="row"><button type="button" aria-pressed="false"><code>shannons_entropy</code></button></th><td>PSD table</td><td><code>{channel}_entropy</code></td></tr>
+                  <tr data-fn="3"><th scope="row"><button type="button" aria-pressed="false"><code>hjorth_params</code></button></th><td>filtered signal</td><td><code>{channel}_{band}_activity</code>, <code>_mobility</code>, <code>_complexity</code></td></tr>
+                  <tr data-fn="4"><th scope="row"><button type="button" aria-pressed="false"><code>wavelet_band_energy</code></button></th><td>raw signal</td><td><code>{channel}_{band}_wenergy</code></td></tr>
+                  <tr data-fn="5"><th scope="row"><button type="button" aria-pressed="false"><code>wavelet_entropy</code></button></th><td>wavelet energy</td><td><code>{channel}_wentropy</code></td></tr>
+                  <tr data-fn="6"><th scope="row"><button type="button" aria-pressed="false"><code>imf_band_energy</code></button></th><td>raw signal</td><td><code>{channel}_{band}_imfenergy</code></td></tr>
+                  <tr data-fn="7"><th scope="row"><button type="button" aria-pressed="false"><code>imf_entropy</code></button></th><td>IMF energy</td><td><code>{channel}_imfentropy</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="fx-flow fig-body" aria-labelledby="fx-flow-title">
+              <h3 class="sr-only" id="fx-flow-title">Selected function flow</h3>
+              <p class="fx-up" id="fx-up"></p>
+              <div class="fx-chain" aria-hidden="true">
+                <div class="fx-node fx-in"><span class="fx-k">Consumes</span><strong id="fx-in"></strong></div>
+                <div class="fx-arrow"></div>
+                <div class="fx-node fx-fn"><span class="fx-k">Function</span><code id="fx-fn"></code></div>
+                <div class="fx-arrow"></div>
+                <div class="fx-node fx-out"><span class="fx-k">Emits</span><code id="fx-out"></code></div>
+              </div>
+              <p class="fx-example" id="fx-example"></p>
+              <p class="sr-only" id="fx-desc" aria-live="polite"></p>
+            </div>
+          </div>
+          <figcaption><b>Table 1.</b> Featurization functions, what each one reads and the columns it writes. Column names combine the channel and the band, for example <code>AF3_alpha</code>.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Figure 3: dataset conversion -->
+    <section class="section" id="datasets" aria-labelledby="datasets-title">
+      <div class="container"><div class="prose">
+        <h2 id="datasets-title">Converting public datasets</h2>
+        <aside class="note">EEGProc does not ship any recordings. Download each dataset from its provider and follow their access and citation terms.</aside>
+        <p><code>eegproc-to-csv</code> reads the files you download from each provider and writes CSV or gzipped CSV. It reads large files in chunks, checks the input layout, and keeps subject and trial boundaries. The output has one row per EEG sample with <code>subject_id</code>, <code>trial_id</code>, <code>segment</code>, <code>sample_idx</code>, one column per channel, and the dataset's labels.</p>
+      </div></div>
+
+      <div class="container">
+        <figure class="fig">
+          <div class="conv fig-body" id="conv" role="img" aria-label="Five dataset sources, DREAMER, AMIGOS, EEGEmotions-27, DEAP and Cowen/Keltner ratings, feed the eegproc-to-csv converter. The EEG datasets become a CSV table with columns subject_id, trial_id, segment, sample_idx, one column per channel, and labels such as valence and arousal.">
+            <ul class="conv-tiles">
+              <li class="tile"><strong>DREAMER</strong><code>DREAMER.mat</code></li>
+              <li class="tile"><strong>AMIGOS</strong><code>Data_Preprocessed_P*.mat</code></li>
+              <li class="tile"><strong>EEGEmotions-27</strong><code>eeg_raw/*.txt</code></li>
+              <li class="tile"><strong>DEAP</strong><code>s*.dat</code></li>
+              <li class="tile tile-ratings"><strong>Cowen/Keltner</strong><code>features.zip</code><span>ratings mapping, not EEG</span></li>
+            </ul>
+            <div class="conv-mid" aria-hidden="true">
+              <svg class="conv-funnel" viewBox="0 0 200 400" preserveAspectRatio="none"></svg>
+              <div class="conv-node"><code>eegproc-to-csv</code><span>reads in chunks</span></div>
+            </div>
+            <div class="conv-out">
+              <div class="csv-wrap">
+                <table class="csv" aria-hidden="true">
+                  <thead>
+                    <tr><th>subject_id</th><th>trial_id</th><th>segment</th><th>sample_idx</th><th>AF3</th><th class="hide-sm">F7</th><th class="hide-sm">F3</th><th class="dots">…</th><th class="hide-sm">AF4</th><th>valence</th><th>arousal</th></tr>
+                  </thead>
+                  <tbody id="csv-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <figcaption><b>Figure 3.</b> The converter takes each provider's file format (left) and writes one table layout (right). The rows shown are illustrative. The Cowen/Keltner input produces an emotion rating mapping rather than EEG rows, and the converter does not normalize, filter or window any values.</figcaption>
+        </figure>
+      </div>
+
+      <div class="container"><div class="prose">
+        <p class="sources">Sources:
+          <a href="https://zenodo.org/records/546113">DREAMER on Zenodo</a>,
+          <a href="https://www.eecs.qmul.ac.uk/mmv/datasets/amigos/">AMIGOS dataset page at QMUL</a>,
+          <a href="https://github.com/huytungst/EEGEmotions-27">EEGEmotions-27 repository on GitHub</a>,
+          <a href="https://www.eecs.qmul.ac.uk/mmv/datasets/deap/">DEAP dataset page at QMUL</a>,
+          <a href="https://doi.org/10.6084/m9.figshare.11988351">Cowen/Keltner feature archive on Figshare</a>.
+          The <a href="https://eego-unc.github.io/EEGProc/datasets.html">EEGProc dataset guide</a> lists the supported file layouts.
+        </p>
+      </div></div>
+    </section>
+
+    <!-- Figures 4 and 5: validation -->
+    <section class="section" id="validation" aria-labelledby="validation-title">
+      <div class="container"><div class="prose">
+        <h2 id="validation-title">Subject-wise validation</h2>
+        <p>EEG varies a lot between people. If windows from one person end up in both the training set and the test set, a model can learn to recognize the person rather than the state, and its scores will not hold for someone new. EEGProc's cross-validation holds out whole subjects, and its windowing never builds a window across two trials.</p>
+      </div></div>
+
+      <div class="container">
+        <figure class="fig">
+          <div class="fig-body">
+            <svg id="win-svg" class="win-svg" viewBox="0 0 960 220" role="img" aria-label="Three trials on a timeline. A four-second window slides with 50 percent overlap. Where the next window would cross a trial boundary, the boundary flashes, the window is rejected, and windowing restarts at the start of the next trial."></svg>
+            <ul class="legend" aria-label="Legend">
+              <li><span class="sw sw-window"></span>window kept</li>
+              <li><span class="sw sw-reject"></span>window rejected because it crosses a trial boundary</li>
+              <li><span class="sw sw-boundary"></span>trial boundary</li>
+            </ul>
+          </div>
+          <figcaption><b>Figure 4.</b> Trial-safe windowing. Four-second windows with 50% overlap are cut inside each trial. A window that would cross a trial boundary is rejected, and windowing starts again at the next trial. Trials shorter than one window raise an error unless you pass <code>on_short_trial="skip"</code>.</figcaption>
+        </figure>
+      </div>
+
+      <div class="container">
+        <figure class="fig loso" id="loso">
+          <div class="loso-inner fig-body">
+            <div class="loso-head">
+              <p class="loso-counter" aria-hidden="true">Fold <span id="loso-fold">23</span> <span class="of">of 23</span></p>
+              <ul class="legend" aria-label="Legend">
+                <li><span class="sw sw-train"></span>training subject</li>
+                <li><span class="sw sw-test"></span>held out for testing</li>
+              </ul>
+            </div>
+            <div class="loso-grid" id="loso-grid" role="img" aria-label="A grid of 23 subject squares. In each fold one subject is highlighted as held out for testing while the other 22 are used for training. A score bar fills for each fold, and an aggregate bar builds at the end."></div>
+            <div class="loso-scores" id="loso-scores" aria-hidden="true"></div>
+            <div class="loso-agg" aria-hidden="true">
+              <span class="loso-agg-label">Aggregate across held-out subjects</span>
+              <span class="loso-agg-track"><span class="loso-agg-fill"></span></span>
+            </div>
+          </div>
+          <figcaption><b>Figure 5.</b> Leave-one-subject-out cross-validation over 23 subjects, as in DREAMER. Each fold trains on 22 subjects and tests on the one held out, so every score comes from a person the model never saw. The score bars and the aggregate are illustrative, not results.</figcaption>
+        </figure>
+      </div>
+
+      <div class="container"><div class="prose">
+        <aside class="note"><code>normalize="subject_zscore"</code> uses each subject's own unlabeled data, including the held-out subject's. That is an offline normalization assumption; leave it out if it does not fit your evaluation.</aside>
+        <p><code>cross_validate_dataframe</code> supports four strategies: <code>"loso"</code> (leave one subject out), <code>"fixed_loso"</code> (the same with fixed settings), <code>"nested_lnso"</code> (nested leave-N-subjects-out tuning) and <code>"subject_calibration"</code> (calibration and few-shot).</p>
+      </div></div>
+    </section>
+
+    <!-- Figure 6: counterfactuals -->
+    <section class="section" id="explain" aria-labelledby="explain-title">
+      <div class="container"><div class="prose">
+        <h2 id="explain-title">Explaining predictions with counterfactuals</h2>
+        <p>A counterfactual answers a specific question: what is the smallest change to this input that would change the model's prediction? EEGProc optimizes the input, or a latent state through an adapter, for any differentiable TensorFlow model. The model's weights stay fixed.</p>
+      </div></div>
+
+      <div class="cf" id="cf">
+        <div class="cf-inner container">
+          <div class="cf-left">
+            <div class="fig-body cf-plot">
+              <div class="cf-plot-head">
+                <h3><span class="panel">a</span> Gradient steps</h3>
+                <p class="pred" aria-hidden="true">Prediction
+                  <span class="pred-chip pred-lo">low valence</span>
+                  <span class="pred-chip pred-hi">high valence</span>
+                </p>
+              </div>
+              <svg id="cf-svg" viewBox="0 0 520 320" role="img" aria-label="A two-dimensional decision plot. A point starts in the low-valence region and moves in small gradient steps, drawing its path, until it crosses the decision boundary into the high-valence region. The prediction flips from low to high valence."></svg>
+            </div>
+            <div class="fig-body cf-panel">
+              <h3><span class="panel">b</span> Largest changes</h3>
+              <ul class="cf-bars" id="cf-bars" aria-label="Illustrative electrode and band changes"></ul>
+            </div>
+          </div>
+          <div class="fig-body cf-topo">
+            <h3><span class="panel">c</span> Scalp topographies</h3>
+            <div class="topo-grid" id="topo-grid" role="img" aria-label="Six scalp maps in two rows and three columns. Columns are the theta, alpha and beta bands. The top row shows amplitude difference between the input and its counterfactual, the bottom row shows root-mean-square difference. Electrodes are marked as dots on a head outline.">
+              <span class="topo-col">theta</span><span class="topo-col">alpha</span><span class="topo-col">beta</span>
+            </div>
+            <div class="topo-legends" aria-hidden="true">
+              <div class="topo-legend"><span>Amplitude: decrease</span><span class="ramp ramp-div"></span><span>increase</span></div>
+              <div class="topo-legend"><span>RMS: smaller</span><span class="ramp ramp-seq"></span><span>larger</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <p class="caption cf-caption"><b>Figure 6.</b> (a) A held-out input moves in small gradient steps across the decision boundary until the prediction changes from low to high valence. (b) The electrode and band features that changed most. (c) Scalp maps of the change for theta, alpha and beta, with amplitude difference in the top row and RMS difference in the bottom row. All values are illustrative.</p>
+      </div>
+
+      <div class="container"><div class="prose">
+        <aside class="note">Topographies need channel positions for your montage. EEGProc does not assume one.</aside>
+        <p>Optimization does not always succeed, so check the result's summary before you interpret a counterfactual. To plot topographies from a saved archive:</p>
+        <div class="code">
+          <div class="code-bar"><span>shell</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-bash">python -m eegproc.model_explainability.model_agnostic.topography \
+  /path/to/counterfactual.npz --branch input --no-show</code></pre>
+        </div>
+      </div></div>
+      <noscript>
+        <div class="container"><img class="static-fallback" src="assets/counterfactual-topographies.png" alt="Counterfactual scalp topographies for theta, alpha and beta bands: amplitude differences above, RMS differences below." width="1068" height="692"></div>
+      </noscript>
+    </section>
+
+    <!-- Version 2.0.0 -->
+    <section class="section" id="changelog" aria-labelledby="changelog-title">
+      <div class="container"><div class="prose">
+        <h2 id="changelog-title">What changed in 2.0.0</h2>
+        <p>Version 2.0.0 reorganized EEGProc into a tested package with an automated release.</p>
+        <ol class="tl" id="tl">
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <h3>Modular package</h3>
+            <p>The code is split into <code>preprocessing</code>, <code>featurization</code>, <code>data</code>, <code>deep_learning</code>, <code>model_explainability</code> and <code>plotting</code>.</p>
+          </li>
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <h3>Dataset converter</h3>
+            <p>A new <code>eegproc-to-csv</code> command with chunked reads, gzip output and input validation.</p>
+          </li>
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <h3>Cross-validation rewrite</h3>
+            <p>A modular cross-validation package (LOSO, nested, calibration, splits, metrics, aggregation and reporting) on top of a windowing layer that keeps windows inside trials.</p>
+          </li>
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <h3>Bug fixes</h3>
+            <p>EEGEmotions-27 label ordering, a double softmax, the default metrics in <code>loso_cv</code>, and the VAE loss on sequence latents.</p>
+          </li>
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <h3>Smaller base install</h3>
+            <p>scikit-learn, joblib, dill and their helpers are no longer installed by default. TensorFlow and scikit-learn moved to the <code>deep-learning</code> extra.</p>
+          </li>
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <h3>Automated release</h3>
+            <p>When a new version reaches <code>main</code>, GitHub Actions runs the tests on Python 3.10 to 3.13, builds and checks the wheel, publishes to PyPI through trusted publishing, and redeploys the Sphinx docs to GitHub Pages. Pushing a <code>testpypi-*</code> tag rehearses the same steps on TestPyPI.</p>
+          </li>
+        </ol>
+      </div></div>
+
+      <div class="container">
+        <figure class="fig release" id="release">
+          <ol class="rel-flow fig-body" aria-label="Release workflow steps, in order">
+            <li class="rel-node"><span class="rel-name">Commit</span><span class="rel-sub">version bump on main</span></li>
+            <li class="rel-node rel-tests"><span class="rel-name">Tests</span>
+              <span class="pyv"><span>3.10</span><span>3.11</span><span>3.12</span><span>3.13</span></span>
+            </li>
+            <li class="rel-node"><span class="rel-name">Build</span><span class="rel-sub">wheel and sdist</span></li>
+            <li class="rel-node"><span class="rel-name">Content check</span><span class="rel-sub">wheel contents, clean install</span></li>
+            <li class="rel-node"><span class="rel-name">TestPyPI</span><span class="rel-sub">rehearsal from a <code>testpypi-*</code> tag</span></li>
+            <li class="rel-node"><span class="rel-name">PyPI</span><span class="rel-sub">trusted publishing</span></li>
+            <li class="rel-node"><span class="rel-name">Docs</span><span class="rel-sub">Sphinx to GitHub Pages</span></li>
+          </ol>
+          <figcaption><b>Figure 7.</b> Steps of the release workflow, in order. The TestPyPI step is a rehearsal triggered by a tag, not part of every release.</figcaption>
+        </figure>
+      </div>
+
+      <div class="container"><div class="prose">
+        <h3>Breaking changes from 1.0.0</h3>
+        <div class="code code-diff">
+          <pre><code><span class="dc"># shannons_entropy now takes the PSD table and returns one value per channel</span>
+<span class="dl"><span class="dm">-</span> entropy = shannons_entropy(clean, fs, FREQUENCY_BANDS, window_sec=4.0, overlap=0.5)</span>
+<span class="da"><span class="dm">+</span> entropy = shannons_entropy(psd_bandpowers(clean, fs, bands=FREQUENCY_BANDS))</span>
+
+<span class="dc"># detrend_df was removed</span>
+<span class="dl"><span class="dm">-</span> detrended = detrend_df(df, "linear")</span>
+<span class="da"><span class="dm">+</span> detrended = apply_detrend("linear", df)</span></code></pre>
+        </div>
+        <p>Python 3.10 or newer is now required. The <a href="https://github.com/EEGo-UNC/EEGProc/blob/main/CHANGELOG.md">full changelog</a> is on GitHub.</p>
+      </div></div>
+    </section>
+
+    <!-- Package layout -->
+    <section class="section" id="layout" aria-labelledby="layout-title">
+      <div class="container"><div class="prose">
+        <h2 id="layout-title">Package layout</h2>
+        <p>The base install includes <code>preprocessing</code>, <code>featurization</code>, <code>data</code> and <code>plotting</code>. <code>deep_learning</code> and <code>model_explainability</code> need the extra. Each module name links to its API reference.</p>
+        <ul class="tree" id="tree"></ul>
+      </div></div>
+    </section>
+
+    <!-- Quickstart -->
+    <section class="section" id="quickstart" aria-labelledby="quickstart-title">
+      <div class="container"><div class="prose">
+        <h2 id="quickstart-title">Quickstart</h2>
+        <p>These snippets use the current API. For a complete run, see the <a href="https://github.com/EEGo-UNC/EEGProc/blob/main/examples/dreamer_bilstm_counterfactual.py">DREAMER example script</a>: preprocessing, PSD features, a BiLSTM, leave-one-subject-out cross-validation and a counterfactual for a held-out input, on DREAMER (23 subjects, 14 EEG channels at 128 Hz, 18 trials per subject).</p>
+
+        <div class="tabs">
+          <div class="tablist" role="tablist" aria-label="Quickstart examples">
+            <button role="tab" type="button" id="tab-feat" aria-controls="panel-feat" aria-selected="true">Featurize</button>
+            <button role="tab" type="button" id="tab-cv" aria-controls="panel-cv" aria-selected="false" tabindex="-1">Cross-validate</button>
+            <button role="tab" type="button" id="tab-exp" aria-controls="panel-exp" aria-selected="false" tabindex="-1">Explain</button>
+          </div>
+
+          <div class="tabpanel" role="tabpanel" id="panel-feat" aria-labelledby="tab-feat" tabindex="0">
+            <p class="panel-intro">Base install: <code>pip install eegproc</code></p>
+            <div class="code">
+              <div class="code-bar"><span>python</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-python">import pandas as pd
+from eegproc import bandpass_filter, psd_bandpowers, shannons_entropy, FREQUENCY_BANDS
+
+raw = pd.read_csv("my_eeg.csv")        # one column per electrode
+fs = 128
+
+clean = bandpass_filter(raw, fs, bands=FREQUENCY_BANDS)   # -&gt; AF3_alpha, AF3_theta, ...
+psd = psd_bandpowers(clean, fs, bands=FREQUENCY_BANDS)    # one row per window
+entropy = shannons_entropy(psd)                           # -&gt; AF3_entropy, F7_entropy</code></pre>
+            </div>
+            <p class="panel-intro">Then plot the band powers over time:</p>
+            <div class="code">
+              <div class="code-bar"><span>python</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-python">from eegproc.plotting import plot_eeg_features
+
+fig, axes = plot_eeg_features(
+    psd, title="EEG band powers", channels=["AF3", "F7"],
+    frequency_bands=["theta", "alpha"], seconds=4, overlap=0.5,
+)</code></pre>
+            </div>
+          </div>
+
+          <div class="tabpanel" role="tabpanel" id="panel-cv" aria-labelledby="tab-cv" tabindex="0" hidden>
+            <p class="panel-intro">Needs the extra: <code>pip install "eegproc[deep-learning]"</code>. The CSV holds <code>subject</code>, <code>trial</code>, a binary <code>label</code>, and EEG features in time order.</p>
+            <div class="code">
+              <div class="code-bar"><span>python</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-python">import pandas as pd
+from eegproc.deep_learning.supervised.rnn_architectures import BiLSTMClassifier
+from eegproc.deep_learning.cross_validation import cross_validate_dataframe
+
+features = pd.read_csv("features.csv")
+
+def build_model(training_features):
+    # Build a fresh BiLSTM using this fold's input dimensions.
+    return BiLSTMClassifier(
+        *training_features.shape[1:], n_classes=2, lstm_units=16, n_bilstm_layers=1,
+    ).build()
+
+results = cross_validate_dataframe(
+    features, build_model, strategy="fixed_loso", fs=128,
+    feature_columns=("AF3_alpha", "F7_alpha"),  # Choose your EEG features only.
+    window_rows=4, normalize="subject_zscore",
+    fixed_config={}, n_epochs=10, batch_size=32,
+)
+# per-subject scores: results["user_metrics"]</code></pre>
+            </div>
+            <p class="panel-note"><code>subject_zscore</code> uses each subject's own unlabeled data, including the held-out subject's. Leave it out if that offline normalization assumption does not fit your evaluation.</p>
+          </div>
+
+          <div class="tabpanel" role="tabpanel" id="panel-exp" aria-labelledby="tab-exp" tabindex="0" hidden>
+            <p class="panel-intro">Needs the extra. <code>model</code> is a loaded Keras model and <code>trial</code> is one input without its batch axis.</p>
+            <div class="code">
+              <div class="code-bar"><span>python</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-python">from eegproc.model_explainability.model_agnostic import (
+    KerasInputAdapter, ModelAgnosticCounterfactualOptimizer,
+)
+
+adapter = KerasInputAdapter(model, output_kind="logits")
+optimizer = ModelAgnosticCounterfactualOptimizer(adapter, target_probability=0.8)
+result = optimizer.optimize(trial[None, ...], target_class=1)</code></pre>
+            </div>
+            <p class="panel-intro">The result holds <code>summary</code>, <code>history</code> and <code>arrays</code>. Save the arrays with your channel metadata, then draw topographies:</p>
+            <div class="code">
+              <div class="code-bar"><span>shell</span><button class="copy-btn" type="button" aria-label="Copy code"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code class="language-bash">python -m eegproc.model_explainability.model_agnostic.topography \
+  /path/to/counterfactual.npz --branch input --no-show</code></pre>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Contributing and citing -->
+    <section class="section" id="contributing" aria-labelledby="contributing-title">
+      <div class="container"><div class="prose">
+        <h2 id="contributing-title">Contributing and citing</h2>
+        <p>EEGProc is built at EEGo Lab. Its contributors are Vitor G. Inserra (<a href="https://github.com/VitorInserra">@VitorInserra</a>), Amit Chalmeti (<a href="https://github.com/qwertyuiopzxcvbnmlkjhgfdsa" aria-label="@Amit_Chalmeti on GitHub (account qwertyuiopzxcvbnmlkjhgfdsa)">@Amit_Chalmeti</a>), Pranav Mucharla (<a href="https://github.com/Pranav1006">@Pranav1006</a>), Sai Nagamalla (<a href="https://github.com/sainag7">@sainag7</a>) and Yashasree Gadipalli (<a href="https://github.com/ygadipalli">@ygadipalli</a>). The <a href="#people">People</a> page lists the whole lab.</p>
+        <p>New model architectures, machine-learning techniques and visualization modules are welcome. Before you open a pull request, read the <a href="https://github.com/EEGo-UNC/EEGProc/blob/main/CONTRIBUTING.md">contributing guide</a>: keep the documentation examples runnable and describe any API change. Questions and bug reports go to the <a href="https://github.com/EEGo-UNC/EEGProc/issues">issue tracker</a>.</p>
+        <p>If EEGProc helps your research, please cite it. This entry comes from <a href="https://github.com/EEGo-UNC/EEGProc/blob/main/CITATION.cff">CITATION.cff</a>:</p>
+        <div class="code">
+          <div class="code-bar"><span>bibtex</span><button class="copy-btn" type="button" aria-label="Copy citation"><svg class="icon i-copy"><use href="#i-copy"/></svg><svg class="icon i-check"><use href="#i-check"/></svg></button></div>
+<pre><code>@software{eegproc,
+  author  = {Inserra, Vitor},
+  title   = {{EEGProc}: {EEG} preprocessing, featurization and subject-wise cross-validation},
+  version = {2.0.0},
+  license = {GPL-2.0},
+  url     = {https://github.com/EEGo-UNC/EEGProc}
+}</code></pre>
+        </div>
+      </div></div>
+    </section>
+    </section>
+
+    <!-- ===================== Projects ===================== -->
+    <section class="page page-projects" id="page-projects" data-page="projects" aria-labelledby="projects-title" hidden>
+      <div class="page-heading">
+        <h1 id="projects-title" tabindex="-1" data-split="words">Projects</h1>
+      </div>
+
+      <article class="publication-entry project-entry project-entry--eegproc" data-slide="left">
+        <a class="project-entry-logo" href="#eegproc" aria-label="Explore EEGProc on this site">
+          <img class="logo-on-dark" data-src="assets/eegproc-logo-dark-600.webp" alt="EEGProc logo" width="600" height="212" loading="lazy">
+          <img class="logo-on-light" data-src="assets/eegproc-logo-light-600.webp" alt="EEGProc logo" width="600" height="212" loading="lazy">
+        </a>
+        <div class="publication-entry-content">
+          <p class="publication-entry-label">Open-source Python library</p>
+          <h2>EEGProc</h2>
+          <p class="publication-entry-detail">Researchers can use EEGProc to build deep-learning pipelines from EEG feature extraction through model building, evaluation, and explainability, with data visualization at every step.</p>
+          <div class="publication-entry-links">
+            <a href="#eegproc">Explore EEGProc</a>
+            <a href="https://github.com/EEGo-UNC/EEGProc">Explore EEGProc on GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="publication-entry project-entry--read-faster" data-slide="right">
+        <div class="publication-entry-content">
+          <p class="publication-entry-label">Forthcoming project</p>
+          <h2>We Can Read Faster</h2>
+          <p class="publication-entry-detail">Could humans read faster and better using EEG BCI?</p>
+        </div>
+        <a class="project-entry-visual project-entry-visual--read-faster" href="assets/lab/we-can-read-faster.webp" aria-label="View the We Can Read Faster illustration at full size">
+          <img data-src="assets/lab/we-can-read-faster.webp" alt="Illustration of a person wearing an EEG headset while reading text" width="900" height="675" loading="lazy" decoding="async" data-zoom>
+        </a>
+      </article>
+
+      <article class="publication-entry project-entry--tetris" data-slide="left">
+        <div class="project-gallery" data-reveal-group>
+          <figure>
+            <a href="assets/lab/neuroadaptive-tetris-game.webp" aria-label="View the Neuroadaptive Tetris game screenshot at full size">
+              <img data-src="assets/lab/neuroadaptive-tetris-game.webp" alt="Neuroadaptive Tetris game screen with colored blocks, a score, and an emotion map" width="700" height="746" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Neuroadaptive Tetris interface</figcaption>
+          </figure>
+          <figure>
+            <a href="https://eego-unc.github.io/Lab/projects/neuroadaptive-valence-arousal.pdf" aria-label="Open the valence and arousal model as a PDF">
+              <img data-src="assets/lab/neuroadaptive-valence-arousal.webp" alt="Valence and arousal chart showing frustration, enjoyment, boredom, and calmness" width="700" height="671" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Valence and arousal model</figcaption>
+          </figure>
+        </div>
+        <div class="publication-entry-content">
+          <p class="publication-entry-label">Neuroadaptive game</p>
+          <h2>Neuroadaptive Tetris</h2>
+          <p class="publication-entry-detail">Neuroadaptive games reimagined. A new paradigm that transforms deep learning cognitive states into a systems dynamics control-loop. The original version uses an Emotiv EPOC X EEG headset.</p>
+          <div class="publication-entry-links">
+            <a href="https://github.com/EEGo-UNC/Tetris-EEG">Explore Neuroadaptive Tetris on GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="publication-entry project-entry--muse" data-slide="right">
+        <div class="publication-entry-content">
+          <p class="publication-entry-label">Muse EEG adaptation</p>
+          <h2>Muse Tetris</h2>
+          <p class="publication-entry-detail">Muse Tetris adapts Neuroadaptive Tetris for use with a Muse EEG headset, bringing the brain-responsive game to a wearable setup.</p>
+          <div class="publication-entry-links">
+            <a href="https://github.com/EEGo-UNC/MuseTetris">Explore Muse Tetris on GitHub</a>
+          </div>
+        </div>
+        <a class="project-entry-visual project-entry-visual--photo" href="assets/lab/muse-tetris-demo.webp" aria-label="View the Muse Tetris demonstration photo at full size">
+          <img data-src="assets/lab/muse-tetris-demo.webp" alt="A participant wearing a Muse EEG headset beside a researcher at a computer" width="1200" height="800" loading="lazy" decoding="async" data-zoom>
+        </a>
+      </article>
+
+      <article class="publication-entry project-entry--mind-tune" data-slide="left">
+        <div class="project-entry-visual project-entry-visual--mind-tune">
+          <img data-src="assets/lab/mindtune-logo.webp" alt="MindTune logo" width="700" height="270" loading="lazy" decoding="async" data-zoom>
+        </div>
+        <div class="publication-entry-content">
+          <p class="publication-entry-label">Interactive EEG game</p>
+          <h2>Mind Tune</h2>
+          <p class="publication-entry-detail">Mind Tune is a small video game where you help a model fine-tune to your emotions. Anyone with an Emotiv EPOC X can try it, and we invite people to contribute to the project.</p>
+        </div>
+      </article>
+
+      <article class="publication-entry project-entry--baas" data-slide="right">
+        <div class="publication-entry-content">
+          <p class="publication-entry-label">Digital-twin simulation framework</p>
+          <h2>Brain as a System (BaaS)</h2>
+          <p class="publication-entry-detail">BaaS is intended as a framework for digital-twin simulations of Neuroadaptive Tetris. It will run multiple simulations with different neuroadaptive controllers so researchers can compare their effects.</p>
+          <div class="publication-entry-links">
+            <a href="https://github.com/EEGo-UNC/BaaS">Explore BaaS on GitHub</a>
+          </div>
+        </div>
+        <a class="project-entry-visual project-entry-visual--chart" href="assets/lab/baas-enjoyment-delay-chart.webp" aria-label="View the BaaS enjoyment and delay chart at full size">
+          <img data-src="assets/lab/baas-enjoyment-delay-chart.webp" alt="Three-dimensional chart of mean enjoyment across controller and user-change delay conditions" width="900" height="918" loading="lazy" decoding="async" data-zoom>
+        </a>
+      </article>
+    </section>
+
+    <!-- ===================== Research and Presentations ===================== -->
+    <section class="page page-research" id="page-research" data-page="research" aria-labelledby="research-title" hidden>
+      <div class="page-heading">
+        <h1 id="research-title" tabindex="-1" data-split="words">Research and Presentations</h1>
+      </div>
+
+      <article class="publication-entry" data-entry>
+        <div class="publication-entry-photo publication-entry-photo--diagram" data-wipe>
+          <img data-src="assets/lab/smc-neurofeedback-policy.webp" alt="Neurofeedback policy diagram connecting an RSVP application, wearable EEG, machine learning, and comprehension-state feedback" width="1200" height="415" loading="lazy" decoding="async">
+        </div>
+        <div class="publication-entry-content">
+          <p class="publication-entry-label">IEEE SMC 2026 · BMI Workshop</p>
+          <h2>EEG Cognitive State Machine: A Modular Framework for Design-Time Experimentation and Run-Time Neurofeedback in Puzzle Games</h2>
+          <p class="publication-entry-byline">Vitor Inserra and Richard Marks</p>
+          <p class="publication-entry-status">Forthcoming in the IEEE SMC 2026 conference proceedings on IEEE Xplore.</p>
+          <div class="publication-entry-links">
+            <a href="https://bci-lab.hochschule-rhein-waal.de/BMI2026/SMC2026-2600.mp4">Watch presentation</a>
+            <a href="https://eego-unc.github.io/Lab/publications/eeg-cognitive-state-machine-preprint.pdf">View preprint (PDF)</a>
+          </div>
+          <p class="publication-entry-venue"><strong>Conference and workshop:</strong> 2026 IEEE International Conference on Systems, Man, and Cybernetics · 16th IEEE SMC Workshop on Brain-Machine Interface (BMI) Systems</p>
+        </div>
+      </article>
+
+      <article class="publication-entry" data-entry>
+        <div class="publication-entry-photo" data-wipe>
+          <img data-src="assets/lab/ilrn-2026-award.webp" alt="An award being presented on stage at iLRN 2026" width="1400" height="933" loading="lazy" decoding="async">
+        </div>
+        <div class="publication-entry-content">
+          <p class="publication-entry-label">iLRN 2026 award</p>
+          <h2>Outstanding Contribution to Design</h2>
+          <p class="publication-entry-detail">EEG Cognitive State Machine for User Experimentation and Closed-Loop Neurofeedback in Text-based/AI Interfaces and Puzzle Games</p>
+          <p class="publication-entry-byline">Vitor Gasparetto Inserra and Richard Marks</p>
+          <div class="publication-entry-links">
+            <a href="https://www.immersivelrn.org/ilrn2026/award-winners/">View the award announcement</a>
+          </div>
+          <p class="publication-entry-venue"><strong>Conference:</strong> 12th International Conference of the Immersive Learning Research Network (iLRN 2026)</p>
+        </div>
+      </article>
+
+      <article class="publication-entry" data-entry>
+        <div class="publication-entry-photo" data-wipe>
+          <img data-src="assets/lab/unc-science-expo-demo.webp" alt="A young visitor wearing a brain-computer interface headset at the UNC Science Expo demo" width="1400" height="933" loading="lazy" decoding="async">
+        </div>
+        <div class="publication-entry-content">
+          <p class="publication-entry-label">UNC Science Expo Demo</p>
+          <h2>Wearable Brain-Computer Interfaces and Neuroadaptive Tetris</h2>
+          <p class="publication-entry-detail">A hands-on demonstration of wearable brain-computer interfaces and neuroadaptive Tetris.</p>
+          <p class="publication-entry-venue"><strong>Event:</strong> 2026 UNC Science Expo</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- ===================== People ===================== -->
+    <section class="page page-people" id="page-people" data-page="people" aria-labelledby="people-title" hidden>
+      <div class="page-heading">
+        <h1 id="people-title" tabindex="-1" data-split="words">People</h1>
+      </div>
+      <section class="people-section" aria-labelledby="members">
+        <h2 id="members">Members</h2>
+        <div class="people-grid">
+          <article class="person-card">
+            <div class="person-portrait">
+              <img data-src="assets/lab/vitor-inserra.webp" alt="Portrait of Vitor G. Inserra" loading="lazy" decoding="async" style="object-position: center top">
+            </div>
+            <div class="person-info">
+              <h3>Vitor G. Inserra</h3>
+              <div class="person-details">
+                <p class="person-education">M.S. Computer Science, UNC Chapel Hill</p>
+                <p>Lead Researcher (Graduate)</p>
+                <p class="person-gh">EEGProc contributor, <a href="https://github.com/VitorInserra">@VitorInserra</a></p>
+              </div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <img data-src="assets/lab/amit-chalmeti.webp" alt="Portrait of Amit Chalmeti" loading="lazy" decoding="async" style="object-position: center top">
+            </div>
+            <div class="person-info">
+              <h3>Amit Chalmeti</h3>
+              <div class="person-details">
+                <p class="person-education">Premedical Post-baccalaureate Program, Columbia University</p>
+                <p>Neuroscience Lead (Graduate)</p>
+                <p class="person-gh">EEGProc contributor, <a href="https://github.com/qwertyuiopzxcvbnmlkjhgfdsa" aria-label="@Amit_Chalmeti on GitHub (account qwertyuiopzxcvbnmlkjhgfdsa)">@Amit_Chalmeti</a></p>
+              </div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <div class="portrait-placeholder" aria-hidden="true"><span class="portrait-initials">PM</span><span class="portrait-status">Photo coming soon</span></div>
+            </div>
+            <div class="person-info">
+              <h3>Pranav Mucharla</h3>
+              <div class="person-details">
+                <p class="person-education">B.S. Computer Science and Math, UNC Chapel Hill (Senior)</p>
+                <p>Student Researcher</p>
+                <p class="person-gh">EEGProc contributor, <a href="https://github.com/Pranav1006">@Pranav1006</a></p>
+              </div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <div class="portrait-placeholder" aria-hidden="true"><span class="portrait-initials">SN</span><span class="portrait-status">Photo coming soon</span></div>
+            </div>
+            <div class="person-info">
+              <h3>Sai Nagamalla</h3>
+              <div class="person-details">
+                <p class="person-education">B.S. Computer Science, UNC Chapel Hill (Junior)</p>
+                <p>Student Researcher</p>
+                <p class="person-gh">EEGProc contributor, <a href="https://github.com/sainag7">@sainag7</a></p>
+              </div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <img data-src="assets/lab/yashasree-gadipalli.webp" alt="Portrait of Yashasree Gadipalli" loading="lazy" decoding="async">
+            </div>
+            <div class="person-info">
+              <h3>Yashasree Gadipalli</h3>
+              <div class="person-details">
+                <p class="person-education">B.S. Data Science and Business, UNC Chapel Hill (Sophomore)</p>
+                <p>Student Researcher</p>
+                <p class="person-gh">EEGProc contributor, <a href="https://github.com/ygadipalli">@ygadipalli</a></p>
+              </div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <div class="portrait-placeholder" aria-hidden="true"><span class="portrait-initials">GM</span><span class="portrait-status">Photo coming soon</span></div>
+            </div>
+            <div class="person-info">
+              <h3>Gabriel Matos</h3>
+              <div class="person-details">
+                <p class="person-education">B.S. Computer Science, UNC Chapel Hill (Sophomore)</p>
+                <p>Student Researcher</p>
+              </div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <div class="portrait-placeholder" aria-hidden="true"><span class="portrait-initials">NP</span><span class="portrait-status">Photo coming soon</span></div>
+            </div>
+            <div class="person-info">
+              <h3>Neha Panda</h3>
+              <div class="person-details">
+                <p class="person-education">B.S. Neuroscience and Statistics, UNC Chapel Hill (Sophomore)</p>
+                <p>Student Researcher</p>
+              </div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <img data-src="assets/lab/eduarda-toledo.webp" alt="Portrait of Eduarda Toledo" loading="lazy" decoding="async">
+            </div>
+            <div class="person-info">
+              <h3>Eduarda Toledo</h3>
+              <div class="person-details">
+                <p class="person-education">B.S. Computer Science and Neuroscience, UNC Chapel Hill (Freshman)</p>
+                <p>Student Researcher</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="people-section" aria-labelledby="main-advisors">
+        <h2 id="main-advisors">Main Advisors</h2>
+        <div class="people-grid people-grid--single-last-tablet">
+          <article class="person-card">
+            <div class="person-portrait">
+              <img data-src="assets/lab/richard-marks.webp" alt="Portrait of Dr. Richard L. Marks" loading="lazy" decoding="async">
+            </div>
+            <div class="person-info">
+              <h3>Dr. Richard L. Marks</h3>
+              <div class="person-details person-details--advisor"><ul>
+                <li>Professor of the Practice, Data Science, UNC Chapel Hill</li>
+                <li>Adjunct Professor, Computer Science</li>
+                <li>Extended Reality and AI Group</li>
+                <li>Previously in industry: Head of PlayStation Research at Sony and Director of Advanced Technologies and Projects at Google</li>
+                <li>Ph.D. Avionics, Stanford University</li>
+              </ul></div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <img data-src="assets/lab/raghavendra-pothukuchi.webp" alt="Portrait of Dr. Raghavendra Pradyumna Pothukuchi" loading="lazy" decoding="async" style="object-position: 95% center">
+            </div>
+            <div class="person-info">
+              <h3>Dr. Raghavendra Pradyumna Pothukuchi</h3>
+              <div class="person-details person-details--advisor"><ul>
+                <li>William R. Kenan Jr. Fellow Assistant Professor, Computer Science, UNC Chapel Hill</li>
+                <li>Adjunct, Lampe UNC/NCSU Joint Department of Biomedical Engineering</li>
+                <li>Adjunct, UNC School of Medicine</li>
+                <li>Affiliate, Neuroscience Curriculum</li>
+                <li>Postdoctoral research, Yale University</li>
+                <li>Ph.D. Computer Science, University of Illinois Urbana-Champaign</li>
+              </ul></div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <img data-src="assets/lab/rosie-dutt.webp" alt="Portrait of Dr. Rosie K. Dutt" loading="lazy" decoding="async">
+            </div>
+            <div class="person-info">
+              <h3>Dr. Rosie K. Dutt</h3>
+              <div class="person-details person-details--advisor"><ul>
+                <li>Professor and Director of Undergraduate Neuroscience, Computational Neuroscience, UNC Chapel Hill</li>
+                <li>Adjunct, Johns Hopkins University</li>
+                <li>Adjunct, Washington University in St. Louis McKelvey School of Engineering</li>
+                <li>Ph.D. Imaging Science, Washington University in St. Louis</li>
+              </ul></div>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="people-section" aria-labelledby="past-members">
+        <h2 id="past-members">Past Members</h2>
+        <div class="people-grid people-grid--single-last-tablet">
+          <article class="person-card">
+            <div class="person-portrait">
+              <div class="portrait-placeholder" aria-hidden="true"><span class="portrait-initials">NA</span><span class="portrait-status">Photo coming soon</span></div>
+            </div>
+            <div class="person-info">
+              <h3>Nicholas Almy</h3>
+              <div class="person-details">
+                <p class="person-education">M.S. Computer Science</p>
+                <p>(currently at IBM)</p>
+              </div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <div class="portrait-placeholder" aria-hidden="true"><span class="portrait-initials">VM</span><span class="portrait-status">Photo coming soon</span></div>
+            </div>
+            <div class="person-info">
+              <h3>Vishwonathan Manoranjan</h3>
+              <div class="person-details">
+                <p class="person-education">M.S. Computer Science</p>
+              </div>
+            </div>
+          </article>
+          <article class="person-card">
+            <div class="person-portrait">
+              <div class="portrait-placeholder" aria-hidden="true"><span class="portrait-initials">JV</span><span class="portrait-status">Photo coming soon</span></div>
+            </div>
+            <div class="person-info">
+              <h3>Jayasri Vaidyarman</h3>
+              <div class="person-details">
+                <p class="person-education">M.S. Computer Science</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-logos" aria-label="Partner logos">
+      <div class="logo-card logo-card--computer-science">
+        <img src="assets/lab/unc-computer-science.webp" alt="UNC Department of Computer Science" width="800" height="229" loading="lazy">
+      </div>
+      <div class="logo-card logo-card--psychology-neuroscience">
+        <img src="assets/lab/unc-psychology-neuroscience.webp" alt="UNC Psychology and Neuroscience" width="900" height="323" loading="lazy">
+      </div>
+      <div class="logo-card logo-card--columbia">
+        <img src="assets/lab/columbia-cumc.webp" alt="Columbia University Medical Center" width="1200" height="182" loading="lazy">
+      </div>
+      <div class="footer-emotiv">
+        <p>We thank Emotiv Inc. for the support</p>
+        <div class="logo-card logo-card--emotiv">
+          <img src="assets/lab/emotiv.webp" alt="Emotiv" width="648" height="432" loading="lazy">
+        </div>
+      </div>
+    </div>
+    <nav class="footer-links" aria-label="EEGProc and lab links">
+      <a href="https://github.com/EEGo-UNC/EEGProc">EEGProc on GitHub</a>
+      <a href="https://eego-unc.github.io/EEGProc/">EEGProc documentation</a>
+      <a href="https://pypi.org/project/eegproc/">PyPI package</a>
+      <a href="https://github.com/EEGo-UNC/EEGProc/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/EEGo-UNC/EEGProc/blob/main/CONTRIBUTING.md">Contributing guide</a>
+      <a href="https://github.com/EEGo-UNC/EEGProc/blob/main/CITATION.cff">CITATION.cff</a>
+      <a href="https://github.com/EEGo-UNC/EEGProc/blob/main/LICENSE">License (GPLv2)</a>
+      <a href="https://github.com/EEGo-UNC">EEGo-UNC on GitHub</a>
+    </nav>
+    <p class="footer-note">EEGProc 2.0.0 is released under the GPLv2 license and requires Python 3.10 or newer.</p>
+  </footer>
+</body>
+</html>

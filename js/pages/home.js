@@ -1,7 +1,7 @@
 // Home: the lab welcome with a live EEG backdrop, a rising hero photo, a quote that lights up
-// word by word, and the featured EEGProc card.
+// word by word, the featured EEGProc and research cards, and the group photo.
 import { initWaveform } from "../waveform.js";
-import { intro, reveals, parallax, splitText } from "../lib/motion.js";
+import { intro, reveals, parallax, splitText, entries, wipes } from "../lib/motion.js";
 
 export function initHome({ gsap, ScrollTrigger, reduced, page }) {
   initWaveform(page.querySelector(".welcome-wave"), {
@@ -38,13 +38,10 @@ export function initHome({ gsap, ScrollTrigger, reduced, page }) {
       });
     }
 
-    const polaroid = page.querySelector("[data-polaroid]");
-    if (polaroid) {
-      gsap.fromTo(polaroid, { y: 70, rotate: -7, opacity: 0 }, {
-        y: 0, rotate: -1.5, opacity: 1, duration: 1.4, ease: "expo.out",
-        scrollTrigger: { trigger: polaroid, start: "top 88%", once: true },
-      });
-    }
+    // The featured research card enters like the Research page; the group photo opens straight
+    // from its center so it settles square with the cards above it.
+    entries(page, gsap);
+    wipes(page, gsap);
   }, page);
   return () => {
     ctx.revert();

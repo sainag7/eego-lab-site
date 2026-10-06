@@ -66,37 +66,35 @@ export function parallax(root, gsap) {
   });
 }
 
-/** Frames open with a clip-path wipe from the center (or from the left). */
+/** Frames open with a clip-path wipe from the center (or from the left). Card visuals are left to entries(). */
 export function wipes(root, gsap) {
   root.querySelectorAll("[data-wipe]").forEach((frame) => {
+    if (frame.closest("[data-entry]")) return;
     const fromLeft = frame.dataset.wipe === "left";
     gsap.fromTo(frame,
       { clipPath: fromLeft ? "inset(0% 100% 0% 0% round 0.75rem)" : "inset(6% 22% 6% 22% round 0.75rem)", opacity: 0.4 },
       {
-        clipPath: "inset(0% 0% 0% 0% round 0.75rem)", opacity: 1, duration: 1.3, ease: "expo.out",
+        clipPath: "inset(0% 0% 0% 0% round 0.75rem)", opacity: 1, duration: 1.3, ease: "expo.out", clearProps: "clipPath",
         scrollTrigger: { trigger: frame, start: "top 85%", once: true },
       });
   });
 }
 
-/** Pictures settle from a slight zoom while their card scrolls into view. */
-export function zooms(root, gsap) {
-  root.querySelectorAll("[data-zoom]").forEach((img) => {
-    gsap.fromTo(img, { scale: 1.16 }, {
-      scale: 1, ease: "none",
-      scrollTrigger: { trigger: img.closest("article, figure") || img, start: "top bottom", end: "center 55%", scrub: true },
-    });
-  });
-}
-
-/** Cards slide in from the side their picture sits on. */
-export function slides(root, gsap) {
-  root.querySelectorAll("[data-slide]").forEach((card) => {
-    const distance = Math.min(70, window.innerWidth * 0.06);
-    const dx = card.dataset.slide === "right" ? distance : -distance;
-    gsap.fromTo(card, { x: dx, opacity: 0 }, {
-      x: 0, opacity: 1, duration: 1.1, ease: "expo.out", clearProps: "transform",
-      scrollTrigger: { trigger: card, start: "top 86%", once: true },
-    });
+/**
+ * Image-and-text cards (Research, Projects, the Home featured research): the card rises, its visual
+ * wipes open from the left while the picture settles from a slight zoom, and the text staggers in.
+ */
+export function entries(root, gsap) {
+  root.querySelectorAll("[data-entry]").forEach((entry) => {
+    const visual = entry.querySelector("[data-wipe]");
+    const parts = entry.querySelectorAll(".publication-entry-content > *");
+    const tl = gsap.timeline({ scrollTrigger: { trigger: entry, start: "top 82%", once: true } });
+    tl.fromTo(entry, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9, ease: "expo.out", clearProps: "transform" }, 0);
+    if (visual) {
+      tl.fromTo(visual, { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, ease: "expo.inOut", clearProps: "clipPath" }, 0.1);
+      const images = visual.querySelectorAll("img");
+      if (images.length) tl.fromTo(images, { scale: 1.2 }, { scale: 1, duration: 1.6, ease: "expo.out", clearProps: "transform" }, 0.1);
+    }
+    tl.fromTo(parts, { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.7, ease: "power3.out", stagger: 0.07, clearProps: "transform" }, 0.3);
   });
 }

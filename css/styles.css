@@ -471,8 +471,6 @@ main { padding-top: var(--header-tall); overflow-x: clip; }
 @media (max-width: 48rem) {
   .publication-entry { grid-template-columns: 1fr; }
   .publication-entry-photo, .project-entry-logo, .project-entry-visual, .featured-visual { width: min(100%, 26rem); justify-self: center; }
-  /* Keep the visual first on narrow screens. */
-  .publication-entry > .publication-entry-content:first-child { order: 2; }
 }
 @media (max-width: 40rem) {
   .project-gallery { grid-template-columns: 1fr; }
@@ -545,7 +543,6 @@ main { padding-top: var(--header-tall); overflow-x: clip; }
 .person-details--advisor ul { padding-left: 1.15rem; }
 .person-details--advisor li + li { margin-top: 0.4rem; }
 .person-details--advisor li::marker { color: var(--accent); }
-.person-gh { margin-top: 0.2rem; }
 @media (max-width: 52rem) {
   .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .people-grid--single-last-desktop > .person-card:last-child { grid-column: auto; }
@@ -590,7 +587,10 @@ main { padding-top: var(--header-tall); overflow-x: clip; }
 [data-theme="light"] .logo-card--psychology-neuroscience img { filter: brightness(0.72) saturate(1.3); }
 .footer-emotiv { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
 .footer-emotiv p { color: var(--muted); font-size: 0.75rem; line-height: 1.25; text-align: center; }
-.footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1.4rem; margin-top: 1.6rem; }
+/* EEGProc's own links close the EEGProc page; the lab footer above carries only partner logos. */
+.eeg-footer { margin-top: clamp(2.5rem, 5vw, 4rem); color: var(--muted); font-size: 0.875rem; }
+.eeg-footer .container { padding-block: 1.5rem 0.5rem; border-top: 1px solid var(--card-border); }
+.footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1.4rem; }
 .footer-links a { color: var(--muted); text-decoration: none; }
 .footer-links a:hover { color: var(--ink); text-decoration: underline; }
 .footer-note { margin-top: 0.8rem; text-align: center; }
@@ -1114,22 +1114,42 @@ figcaption b, .caption b, .fig-num { font-weight: 700; color: var(--ink); }
 .tl-item.is-lit .tl-dot { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent); }
 .tl-item h3 { font-size: 1.12rem; font-weight: 600; }
 .tl-item p { color: var(--ink-2); margin-top: 4px; }
-.rel-flow { list-style: none; display: grid; gap: 14px; }
-@media (min-width: 960px) { .rel-flow { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; } }
-.rel-node { position: relative; display: flex; flex-direction: column; gap: 5px; padding: 12px 10px; border-radius: 0.5rem; border: 1px solid var(--card-border); background: var(--figure); transition: border-color 0.35s, background-color 0.35s, box-shadow 0.35s; }
-.rel-node::after { content: ""; position: absolute; left: 50%; bottom: -15px; width: 2px; height: 14px; background: var(--card-border); transition: background-color 0.35s; }
-.rel-node:last-child::after { display: none; }
-@media (min-width: 960px) { .rel-node::after { left: auto; right: -13px; bottom: auto; top: 50%; width: 12px; height: 2px; } }
-.rel-name { font-size: 0.95rem; font-weight: 600; }
-.rel-sub { font-size: 0.8rem; color: var(--ink-2); line-height: 1.35; }
-.rel-sub code { font-size: 0.74rem; background: none; padding: 0; }
-.rel-node.is-lit { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, var(--figure)); box-shadow: 0 0 24px -10px var(--ok); }
-.rel-node.is-lit::after { background: var(--ok); }
-.rel-node.is-lit .rel-name::after { content: " ✓"; color: var(--ok-text); }
-.pyv { display: flex; flex-wrap: wrap; gap: 4px; }
-.pyv span { font-size: 0.72rem; font-weight: 500; padding: 4px 5px; border-radius: 4px; border: 1px solid var(--photo-border); color: var(--ink-2); transition: border-color 0.3s, color 0.3s, background-color 0.3s; }
-.pyv span.is-lit { border-color: var(--ok); color: var(--ok-text); background: color-mix(in srgb, var(--ok) 12%, var(--figure)); }
-.pyv span.is-lit::before { content: "✓ "; }
+
+/* Figure 7: 1.0.0's two modules grow into 2.0.0's six. --hl lights a module, --p draws the branch. */
+.pkgs-body { display: grid; grid-template-columns: minmax(0, 0.75fr) auto minmax(0, 2fr); align-items: start; gap: clamp(12px, 2.5vw, 28px); }
+.pkgs-col { min-width: 0; }
+.fig-body .pkgs-ver { margin-bottom: 10px; color: var(--ink); font-size: 1.05rem; font-weight: 700; }
+.pkgs-group { margin: 16px 0 8px; color: var(--ink-2); font-size: 0.85rem; }
+.pkgs-ver + .pkgs-group { margin-top: 0; }
+.pkgs-group code, .pkg code { padding: 0; background: none; }
+.pkgs-list { list-style: none; display: grid; gap: 8px; }
+.pkg {
+  --hl: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  padding: 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) calc(var(--hl) * 100%), var(--card-border));
+  border-radius: 0.5rem;
+  background: var(--figure);
+}
+.pkg > code { color: var(--ink); font-size: 0.9rem; font-weight: 600; }
+.pkg > span, .pkg-sub > span { color: var(--ink-2); font-size: 0.82rem; line-height: 1.4; }
+.pkg-added { border-color: color-mix(in srgb, var(--accent) 40%, var(--card-border)); }
+.pkg-dl { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, var(--figure)); box-shadow: 0 0 26px -14px var(--accent); }
+.pkg-dl > code { color: var(--accent); }
+.pkg-subs { --p: 1; position: relative; list-style: none; flex-basis: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 8px 0 3px; padding-left: 16px; }
+.pkg-subs::before { content: ""; position: absolute; left: 3px; top: 2px; bottom: 2px; width: 2px; border-radius: 2px; background: var(--accent); transform-origin: top; transform: scaleY(var(--p)); }
+.pkg-sub { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 8px 10px; border: 1px solid var(--card-border); border-radius: 0.4rem; background: var(--card); }
+.pkg-sub > code { color: var(--ink); font-size: 0.84rem; font-weight: 600; overflow-wrap: anywhere; }
+/* Level with the 1.0.0 modules it points away from. */
+.pkgs-arrow { align-self: start; margin-top: 3.6rem; width: 48px; height: 24px; fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 60; }
+@media (max-width: 40rem) {
+  .pkgs-body { grid-template-columns: 1fr; }
+  .pkgs-arrow { justify-self: center; margin-top: 0; transform: rotate(90deg); }
+  .pkg-subs { grid-template-columns: 1fr; }
+}
 
 /* Package layout */
 .tree, .tree ul { list-style: none; }

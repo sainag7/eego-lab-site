@@ -6,7 +6,7 @@ import { initConverter } from "../converter.js";
 import { initWindowing } from "../windowing.js";
 import { initLoso } from "../loso.js";
 import { initCounterfactual } from "../counterfactual.js";
-import { initRelease } from "../release.js";
+import { initChanges } from "../changes.js";
 import { intro } from "../lib/motion.js";
 
 // Text blocks that rise in as they enter (the figures animate themselves).
@@ -28,7 +28,7 @@ export function initEEGProc({ gsap, ScrollTrigger, reduced, page, scrollToY }) {
 
   const cleanups = [];
   const run = () => {
-    for (const init of [initPipeline, initConverter, initWindowing, initLoso, initCounterfactual, initRelease]) {
+    for (const init of [initPipeline, initConverter, initWindowing, initLoso, initCounterfactual, initChanges]) {
       const cleanup = init(ctx);
       if (typeof cleanup === "function") cleanups.push(cleanup);
     }

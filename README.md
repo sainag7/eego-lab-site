@@ -18,10 +18,10 @@ The site is one HTML file with five pages, switched by the URL hash like the lab
 
 | Hash | Page |
 |---|---|
-| `#home` | Welcome, Science Expo photo, quote, lab description, featured EEGProc card, group photo |
-| `#eegproc` | The library: pipeline, model, features, datasets, validation, counterfactuals, 2.0.0, layout, quickstart, contributing, citing |
-| `#projects` | The six lab projects |
-| `#research` | Research and presentations (`#publications` also works) |
+| `#home` | Welcome, Science Expo photo, quote, lab description, featured EEGProc and research cards, group photo |
+| `#eegproc` | The library: pipeline, model, features, datasets, validation, counterfactuals, what changed in 2.0.0, layout, quickstart, contributing, citing, and EEGProc's own footer links |
+| `#projects` | The six lab projects, each with its picture on the left |
+| `#research` | Research and presentations, including the forthcoming counterfactual paper (`#publications` also works) |
 | `#people` | Members, main advisors, past members |
 
 A hash that names an element inside a page, such as `#datasets` or `#quickstart`, opens that page and scrolls to the element. Back and forward work. Each page's script returns a cleanup that runs when the reader leaves, so ScrollTrigger pins only exist for the page on screen. Images on pages other than Home load the first time their page opens.
@@ -29,13 +29,13 @@ A hash that names an element inside a page, such as `#datasets` or `#quickstart`
 ## Layout
 
 ```
-index.html            header, the five pages, footer, metadata, JSON-LD
+index.html            header, the five pages, the lab footer (partner logos), metadata, JSON-LD
 css/styles.css        lab tokens (navy default, light theme on the toggle), lab components, EEGProc figures
 js/main.js            router and page transitions, header, nav indicator, theme, copy buttons, tabs, smooth scroll
-js/lib/motion.js      shared animation helpers: split text, intro, reveals, parallax, wipes, zooms, slides
-js/pages/home.js      Home: waveform backdrop, title, photo, quote that lights up as it scrolls, group photo
+js/lib/motion.js      shared animation helpers: split text, intro, reveals, parallax, wipes, and entries for picture-and-text cards
+js/pages/home.js      Home: waveform backdrop, title, photo, quote that lights up as it scrolls, featured cards, group photo
 js/pages/eegproc.js   EEGProc: starts the figure modules below and the text reveals
-js/pages/lab.js       Projects, Research and People animations
+js/pages/lab.js       Projects and Research (shared card entrance) and People animations
 js/lib/signal.js      seeded synthetic EEG, SVG helpers, scalp geometry, color ramps
 js/waveform.js        EEG waveform canvases (Home backdrop, featured card, EEGProc masthead)
 js/pipeline.js        pinned five-step pipeline
@@ -43,7 +43,7 @@ js/windowing.js       trial-safe windowing
 js/loso.js            leave-one-subject-out grid
 js/counterfactual.js  counterfactual path and scalp topographies
 js/converter.js       dataset converter
-js/release.js         2.0.0 timeline and release pipeline
+js/changes.js         2.0.0: modules growing from two to six, and the timeline of changes
 js/interactive.js     valence-arousal plane, gauges, featurization explorer, package tree
 assets/               EEGProc images from docs/source/_static, logo variants, favicons, social card
 assets/lab/           lab photos, portraits, project images and partner logos, resized to WebP

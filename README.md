@@ -19,7 +19,7 @@ The site is one HTML file with five pages, switched by the URL hash like the lab
 | Hash | Page |
 |---|---|
 | `#home` | Welcome, Science Expo photo, quote, lab description, featured EEGProc and research cards, group photo |
-| `#eegproc` | The library: pipeline, model, features, datasets, validation, counterfactuals, what changed in 2.0.0, layout, quickstart, contributing, citing, and EEGProc's own footer links |
+| `#eegproc` | The library: pipeline, model, features, datasets, validation, counterfactuals, what changed in 2.0.0, layout, quickstart, contributing, citing, and EEGProc's own footer links. Wide screens get a clickable "On this page" sidebar |
 | `#projects` | The six lab projects, each with its picture on the left |
 | `#research` | Research and presentations, including the forthcoming counterfactual paper (`#publications` also works) |
 | `#people` | Members, main advisors, past members |
@@ -44,6 +44,7 @@ js/loso.js            leave-one-subject-out grid
 js/counterfactual.js  counterfactual path and scalp topographies
 js/converter.js       dataset converter
 js/changes.js         2.0.0: modules growing from two to six, and the timeline of changes
+js/toc.js             EEGProc's "On this page" sidebar (wide screens): highlights the section being read
 js/interactive.js     valence-arousal plane, gauges, featurization explorer, package tree
 assets/               EEGProc images from docs/source/_static, logo variants, favicons, social card
 assets/lab/           lab photos, portraits, project images and partner logos, resized to WebP
